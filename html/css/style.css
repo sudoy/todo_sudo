@@ -1,0 +1,18 @@
+.navbar-default{
+	background-color: white;
+}
+body{
+	background-color: #FBFBFB;
+}
+.navbar-default .navbar-brand{
+	font-size: 24px;
+}
+h4{
+	margin-bottom: 5px;
+}
+.alert-danger{
+	background-color: #f3ecec;
+}
+hr{
+	margin-top: 0;
+}
