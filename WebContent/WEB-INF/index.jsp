@@ -1,4 +1,8 @@
 <%@ page contentType="text/html; charset=utf-8" %>
+<%@ page import="java.sql.ResultSet" %>
+<%
+	ResultSet rs = (ResultSet) request.getAttribute("rs");
+%>
 
 <jsp:include page="include/_header.jsp" />
 
@@ -9,30 +13,14 @@
 		<th>重要度</th>
 		<th>期限</th>
 	</tr>
+<% while(rs.next()) { %>
 	<tr>
-		<td>1</td>
-		<td><a href="update.html">テストテスト</a></td>
-		<td>★★★</td>
-		<td>2015/06/20</td>
+		<td><%= rs.getString("id") %></td>
+		<td><a href="update.html"><%= rs.getString("title") %></a></td>
+		<td><%= rs.getString("importance") %></td>
+		<td><%= rs.getString("limit_date") %></td>
 	</tr>
-	<tr>
-		<td>2</td>
-		<td><a href="update.html">テストテスト</a></td>
-		<td>★</td>
-		<td>2015/06/22</td>
-	</tr>
-	<tr>
-		<td>3</td>
-		<td><a href="update.html">テストテスト</a></td>
-		<td>★★★</td>
-		<td>2015/06/20</td>
-	</tr>
-	<tr>
-		<td>4</td>
-		<td><a href="update.html">テストテスト</a></td>
-		<td>★★</td>
-		<td></td>
-	</tr>
+<% } %>
 </table>
 
 <a href="entry.html" class="btn btn-primary">追 加</a>
