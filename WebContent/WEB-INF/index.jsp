@@ -1,8 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" %>
-<%@ page import="java.sql.ResultSet" %>
-<%
-	ResultSet rs = (ResultSet) request.getAttribute("rs");
-%>
+<%@ page import="todo.utils.HtmlUtils" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <jsp:include page="include/_header.jsp" />
 
@@ -13,14 +11,14 @@
 		<th>重要度</th>
 		<th>期限</th>
 	</tr>
-<% while(rs.next()) { %>
+<c:forEach var="todo" items="${todos}">
 	<tr>
-		<td><%= rs.getString("id") %></td>
-		<td><a href="update.html"><%= rs.getString("title") %></a></td>
-		<td><%= rs.getString("importance") %></td>
-		<td><%= rs.getString("limit_date") %></td>
+		<td>${todo.id}</td>
+		<td><a href="update.html">${todo.title}</a></td>
+		<td>${HtmlUtils.formatImportance(todo)}</td>
+		<td>${HtmlUtils.formatLimitDate(todo)}</td>
 	</tr>
-<% } %>
+</c:forEach>
 </table>
 
 <a href="entry.html" class="btn btn-primary">追 加</a>
