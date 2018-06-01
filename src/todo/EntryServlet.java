@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,12 +30,16 @@ public class EntryServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
 
+		// reqの内容を変数に入れる
 		String title = req.getParameter("title");
 		String detail = req.getParameter("detail");
 		String importance = req.getParameter("importance");
 		String limitDate = req.getParameter("limit_date");
 
-		if(validate(title, limitDate, importance)){
+		// バリデーションチェック
+		List<String> errors = validate(title, limitDate, importance);
+		if(errors.size() > 0){
+			req.setAttribute("errors", errors);
 			getServletContext().getRequestDispatcher("/WEB-INF/entry.jsp").forward(req, resp);
 			return;
 		}
@@ -54,8 +60,6 @@ public class EntryServlet extends HttpServlet {
 			ps.setString(3, importance);
 			ps.setString(4, limitDate.equals("") ? null : limitDate);
 
-			System.out.println(ps);
-
 			ps.executeUpdate();
 
 			// index.htmlへ遷移
@@ -70,16 +74,18 @@ public class EntryServlet extends HttpServlet {
 		}
 	}
 
-	private boolean validate(String title, String limitDate, String importance) {
+	private List<String> validate(String title, String limitDate, String importance) {
+		List<String> errors = new ArrayList<>();
+
 		// 題名の必須
 		if (title.equals("")) {
 			// エラーが発生
-			return true;
+			errors.add("題名は必須入力です。");
 		}
 
 		// 題名100文字制限
 		if(title.length() > 100) {
-			return true;
+			errors.add("題名は100文字以内にして下さい。");
 		}
 
 		// 日付の形式（YYYY/MM/DD）
@@ -88,16 +94,16 @@ public class EntryServlet extends HttpServlet {
 				LocalDate.parse(limitDate, DateTimeFormatter.ofPattern("uuuu/MM/dd")
 						.withResolverStyle(ResolverStyle.STRICT));
 			}catch(Exception e) {
-				return true;
+				errors.add("期限は「YYYY/MM/DD」形式で入力して下さい。");
 			}
 		}
 
 		// 重要度が1から3のチェック
 		if(!importance.equals("1") && !importance.equals("2")
 				&& !importance.equals("3")) {
-			return true;
+			errors.add("不正なアクセスです。");
 		}
 
-		return false;
+		return errors;
 	}
 }

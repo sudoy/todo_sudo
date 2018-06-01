@@ -24,10 +24,20 @@ public class HtmlUtils {
 
 	public static String formatLimitDate(Todo todo) {
 		LocalDate limit = todo.getLimitDate();
-		if(limit == null) {
+		if (limit == null) {
 			return "";
 		}
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 		return limit.format(dtf);
+	}
+
+	public static String checkImportance(String param, String value) {
+		if (param.equals("") && value.equals("3")) {
+			return "checked";
+		} else if (param.equals(value)) {
+			return "checked";
+		} else {
+			return "";
+		}
 	}
 }
