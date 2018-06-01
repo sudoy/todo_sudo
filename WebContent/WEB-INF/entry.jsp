@@ -7,17 +7,17 @@
 <hr>
 
 <div class="row">
-	<form class="form-horizontal" action="index.html" method="post">
+	<form class="form-horizontal" action="entry.html" method="post">
 		<div class="form-group">
 			<label for="title" class="col-sm-2 control-label">題名</label>
 			<div class="col-sm-10">
-				<input type="text" class="form-control" id="title" placeholder="題名">
+				<input type="text" class="form-control" name="title" id="title" placeholder="題名">
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="detail" class="col-sm-2 control-label">詳細</label>
 			<div class="col-sm-10">
-				<textarea class="form-control" id="detail" placeholder="詳細" rows="3"></textarea>
+				<textarea class="form-control" name="detail" id="detail" placeholder="詳細" rows="3"></textarea>
 			</div>
 		</div>
 		<div class="form-group">
@@ -25,19 +25,19 @@
 			<div class="col-sm-10">
 				<div class="radio">
 					<label>
-						<input type="radio" name="importance" id="importance3" value="option1" checked>
+						<input type="radio" name="importance" id="importance3" value="3" checked>
 						★★★
 					</label>
 				</div>
 				<div class="radio">
 					<label>
-						<input type="radio" name="importance" id="importance2" value="option2">
+						<input type="radio" name="importance" id="importance2" value="2">
 						★★
 					</label>
 				</div>
-				<div class="radio disabled">
+				<div class="radio">
 					<label>
-						<input type="radio" name="importance" id="importance1" value="option3" disabled>
+						<input type="radio" name="importance" id="importance1" value="1">
 						★
 					</label>
 				</div>
@@ -46,7 +46,7 @@
 		<div class="form-group">
 			<label for="limit" class="col-sm-2 control-label">期限</label>
 			<div class="col-sm-10">
-				<input type="text" class="form-control" id="limit" placeholder="期限">
+				<input type="text" class="form-control" name="limit_date" id="limit" placeholder="期限">
 			</div>
 		</div>
 		<div class="form-group">
