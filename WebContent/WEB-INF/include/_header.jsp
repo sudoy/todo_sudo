@@ -35,24 +35,6 @@
 		</nav>
 
 		<div class="container">
-		<!--
-			<div class="alert alert-success alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4><strong>完了しました！</strong></h4>
-				<ul>
-					<li>No.27 のTodoを更新しました。</li>
-				</ul>
-			</div>
-		 -->
+			<jsp:include page="_successes.jsp" />
+			<jsp:include page="_errors.jsp" />
 
-		<c:if test="${errors.size() > 0}">
-			<div class="alert alert-danger alert-dismissible" role="alert">
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4><strong>エラーが発生しました！</strong></h4>
-				<ul>
-				<c:forEach var="error" items="${errors}">
-					<li>${error}</li>
-				</c:forEach>
-				</ul>
-			</div>
-		</c:if>

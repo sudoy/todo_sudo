@@ -11,6 +11,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import todo.utils.DBUtils;
 
@@ -21,6 +22,7 @@ public class DeleteServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		req.setCharacterEncoding("UTF-8");
+		HttpSession session = req.getSession();
 
 		// reqの内容を変数に入れる
 		String id = req.getParameter("id");
@@ -28,6 +30,7 @@ public class DeleteServlet extends HttpServlet {
 		// バリデーションチェック
 		List<String> errors = validate(id);
 		if(errors.size() > 0){
+			session.setAttribute("errors", errors);
 			resp.sendRedirect("index.html");
 			return;
 		}
@@ -48,6 +51,9 @@ public class DeleteServlet extends HttpServlet {
 			ps.executeUpdate();
 
 			// index.htmlへ遷移
+			List<String> successes = new ArrayList<String>();
+			successes.add("削除しました。");
+			session.setAttribute("successes", successes);
 			resp.sendRedirect("index.html");
 
 		} catch (Exception e) {

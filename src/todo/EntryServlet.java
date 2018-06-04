@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import todo.utils.DBUtils;
 
@@ -29,6 +30,7 @@ public class EntryServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.setCharacterEncoding("UTF-8");
+		HttpSession session = req.getSession();
 
 		// reqの内容を変数に入れる
 		String title = req.getParameter("title");
@@ -39,7 +41,7 @@ public class EntryServlet extends HttpServlet {
 		// バリデーションチェック
 		List<String> errors = validate(title, limitDate, importance);
 		if(errors.size() > 0){
-			req.setAttribute("errors", errors);
+			session.setAttribute("errors", errors);
 			getServletContext().getRequestDispatcher("/WEB-INF/entry.jsp").forward(req, resp);
 			return;
 		}
@@ -63,6 +65,9 @@ public class EntryServlet extends HttpServlet {
 			ps.executeUpdate();
 
 			// index.htmlへ遷移
+			List<String> successes = new ArrayList<>();
+			successes.add("登録しました。");
+			session.setAttribute("successes", successes);
 			resp.sendRedirect("index.html");
 
 		} catch (Exception e) {
