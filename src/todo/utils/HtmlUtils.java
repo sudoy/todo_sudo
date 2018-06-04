@@ -2,6 +2,7 @@ package todo.utils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 import todo.beans.Todo;
 
@@ -22,13 +23,23 @@ public class HtmlUtils {
 		}
 	}
 
-	public static String formatLimitDate(Todo todo) {
-		LocalDate limit = todo.getLimitDate();
-		if (limit == null) {
-			return "";
+	public static String formatLimitDate(Object todo) {
+		if (todo instanceof Todo) {
+			LocalDate limit = ((Todo) todo).getLimitDate();
+			if (limit == null) {
+				return "";
+			}
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+			return limit.format(dtf);
+
+		} else if (todo instanceof Map) {
+			@SuppressWarnings("unchecked")
+			Map<String, String> m = (Map<String, String>) todo;
+			return m.get("limit_date");
+
+		} else {
+			return todo.toString();
 		}
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		return limit.format(dtf);
 	}
 
 	public static String checkImportance(String param, String value) {
