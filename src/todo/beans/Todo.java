@@ -17,6 +17,9 @@ public class Todo {
 		this.importance = importance;
 		this.limitDate = limitDate;
 	}
+	public Todo() {
+
+	}
 	public int getId() {
 		return id;
 	}
