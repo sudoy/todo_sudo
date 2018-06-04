@@ -79,7 +79,6 @@ public class UpdateServlet extends HttpServlet {
 		List<String> errors = validate(id, title, limitDate, importance);
 		if(errors.size() > 0){
 			req.setAttribute("errors", errors);
-			req.setAttribute("todo", new Todo());
 			getServletContext().getRequestDispatcher("/WEB-INF/update.jsp").forward(req, resp);
 			return;
 		}

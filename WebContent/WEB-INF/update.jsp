@@ -56,7 +56,7 @@
 				<button type="submit" class="btn btn-primary">更 新</button>
 			</div>
 			<div class="col-sm-2 text-right">
-				<button type="submit" class="btn btn-danger">削 除</button>
+				<a href="delete.html?id=${todo.id}" class="btn btn-danger">削 除</a>
 			</div>
 		</div>
 	</form>
