@@ -8,6 +8,9 @@
 
 <jsp:include page="include/_header.jsp" />
 
+<jsp:include page="include/_successes.jsp" />
+<jsp:include page="include/_errors.jsp" />
+
 <h4><strong>更新フォーム</strong></h4>
 <hr>
 

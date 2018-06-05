@@ -4,6 +4,9 @@
 
 <jsp:include page="include/_header.jsp" />
 
+<jsp:include page="include/_successes.jsp" />
+<jsp:include page="include/_errors.jsp" />
+
 <table class="table">
 	<tr>
 		<th>#</th>

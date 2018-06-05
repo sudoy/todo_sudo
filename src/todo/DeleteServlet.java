@@ -14,12 +14,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import todo.utils.DBUtils;
+import todo.utils.Utils;
 
 @WebServlet("/delete.html")
 public class DeleteServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
+
+		// ログインチェック
+		if(!Utils.checkLogin(req, resp)) {
+			return;
+		}
 
 		req.setCharacterEncoding("UTF-8");
 		HttpSession session = req.getSession();

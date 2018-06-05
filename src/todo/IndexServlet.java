@@ -23,6 +23,11 @@ public class IndexServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
+		// ログインチェック
+		if(!Utils.checkLogin(req, resp)) {
+			return;
+		}
+
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -56,12 +61,5 @@ public class IndexServlet extends HttpServlet {
 		} finally {
 			DBUtils.close(con, ps, rs);
 		}
-	}
-
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-
-		getServletContext().getRequestDispatcher("/WEB-INF/index.jsp").forward(req, resp);
 	}
 }

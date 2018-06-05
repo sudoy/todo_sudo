@@ -30,11 +30,21 @@
 					<a class="navbar-brand" href="index.html">Todoリスト</a>
 				</div>
 
-
+			<c:if test="${user ne null}">
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+							${user.name}
+						<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="logout.html">ログアウト</a></li>
+						</ul>
+					</li>
+				</ul>
+				</c:if>
 			</div>
 		</nav>
 
 		<div class="container">
-			<jsp:include page="_successes.jsp" />
-			<jsp:include page="_errors.jsp" />
+
 
