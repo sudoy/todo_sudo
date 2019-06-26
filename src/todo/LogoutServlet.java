@@ -11,18 +11,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import todo.utils.Utils;
-
 @WebServlet("/logout.html")
 public class LogoutServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		// ログインチェック
-		if(!Utils.checkLogin(req, resp)) {
-			return;
-		}
+//		// ログインチェック
+//		if(!Utils.checkLogin(req, resp)) {
+//			return;
+//		}
 
 		// ログアウト処理
 		HttpSession session = req.getSession();

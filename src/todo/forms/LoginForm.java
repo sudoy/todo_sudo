@@ -1,18 +1,25 @@
-package todo.beans;
+package todo.forms;
 
-public class User {
+import javax.servlet.http.HttpServletRequest;
+
+public class LoginForm {
 	private int id;
 	private String email;
 	private String password;
 	private String name;
 
-	public User(int id, String email, String password, String name) {
-		super();
-		this.id = id;
-		this.email = email;
-		this.password = password;
-		this.name = name;
+	/**
+	 * パラメータからformへの変換
+	 * @param req
+	 * @return
+	 */
+	public static LoginForm fromParameter(HttpServletRequest req) {
+		LoginForm form = new LoginForm();
+		form.setEmail(req.getParameter("email"));
+		form.setPassword(req.getParameter("password"));
+		return form;
 	}
+
 	public int getId() {
 		return id;
 	}
@@ -37,5 +44,4 @@ public class User {
 	public void setName(String name) {
 		this.name = name;
 	}
-
 }

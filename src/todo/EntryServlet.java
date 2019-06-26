@@ -1,8 +1,6 @@
 package todo;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.ResolverStyle;
@@ -16,81 +14,60 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import todo.utils.DBUtils;
-import todo.utils.Utils;
+import todo.forms.EntryForm;
+import todo.service.TodoService;
 
 @WebServlet("/entry.html")
 public class EntryServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		// ログインチェック
-		if(!Utils.checkLogin(req, resp)) {
-			return;
-		}
-
 		getServletContext().getRequestDispatcher("/WEB-INF/entry.jsp").forward(req, resp);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		// ログインチェック
-		if(!Utils.checkLogin(req, resp)) {
-			return;
-		}
 
-		req.setCharacterEncoding("UTF-8");
 		HttpSession session = req.getSession();
 
-		// reqの内容を変数に入れる
-		String title = req.getParameter("title");
-		String detail = req.getParameter("detail");
-		String importance = req.getParameter("importance");
-		String limitDate = req.getParameter("limit_date");
+		// パラメータをEntityに変換
+		EntryForm form = EntryForm.fromParameter(req);
 
 		// バリデーションチェック
-		List<String> errors = validate(title, limitDate, importance);
+		List<String> errors = validate(form);
 		if(errors.size() > 0){
+			req.setAttribute("form", form);
 			session.setAttribute("errors", errors);
 			getServletContext().getRequestDispatcher("/WEB-INF/entry.jsp").forward(req, resp);
 			return;
 		}
 
-		Connection con = null;
-		PreparedStatement ps = null;
-		try {
-			// Connectionの取得
-			con = DBUtils.getConnection();
+		// INSERT文を実行
+		TodoService service = new TodoService();
+		service.register(form);
 
-			// SQL実行
-			String sql = ""
-					+ "INSERT INTO todos (title, detail, importance, limit_date) "
-					+ "VALUES (?, ?, ?, ?)";
-			ps = con.prepareStatement(sql);
-			ps.setString(1, title);
-			ps.setString(2, detail);
-			ps.setString(3, importance);
-			ps.setString(4, limitDate.equals("") ? null : limitDate);
-
-			ps.executeUpdate();
-
-			// index.htmlへ遷移
-			List<String> successes = new ArrayList<>();
-			successes.add("登録しました。");
-			session.setAttribute("successes", successes);
-			resp.sendRedirect("index.html");
-
-		} catch (Exception e) {
-			throw new ServletException(e);
-
-		} finally {
-			// Cnnectionクローズ
-			DBUtils.close(con, ps);
-		}
+		// index.htmlへ遷移
+		List<String> successes = new ArrayList<>();
+		successes.add("登録しました。");
+		session.setAttribute("successes", successes);
+		resp.sendRedirect("index.html");
 	}
 
-	private List<String> validate(String title, String limitDate, String importance) {
+	/**
+	 * バリデーションチェック
+	 * @param req
+	 * @return
+	 */
+	private List<String> validate(EntryForm form) {
+
+		// formの内容を変数に入れる
+		String title = form.getTitle();
+		String detail = form.getDetail();
+		String importance = form.getImportance();
+		String limitDate = form.getLimitDate();
+
+		// エラー配列
 		List<String> errors = new ArrayList<>();
 
 		// 題名の必須
@@ -102,6 +79,11 @@ public class EntryServlet extends HttpServlet {
 		// 題名100文字制限
 		if(title.length() > 100) {
 			errors.add("題名は100文字以内にして下さい。");
+		}
+
+		// 詳細500文字制限
+		if(detail.length() > 500) {
+			errors.add("詳細は500文字以内にして下さい。");
 		}
 
 		// 日付の形式（YYYY/MM/DD）

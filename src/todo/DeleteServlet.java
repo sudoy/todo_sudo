@@ -1,8 +1,6 @@
 package todo;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import todo.utils.DBUtils;
-import todo.utils.Utils;
+import todo.service.TodoService;
 
 @WebServlet("/delete.html")
 public class DeleteServlet extends HttpServlet {
@@ -22,12 +19,6 @@ public class DeleteServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		// ログインチェック
-		if(!Utils.checkLogin(req, resp)) {
-			return;
-		}
-
-		req.setCharacterEncoding("UTF-8");
 		HttpSession session = req.getSession();
 
 		// reqの内容を変数に入れる
@@ -41,34 +32,15 @@ public class DeleteServlet extends HttpServlet {
 			return;
 		}
 
-		Connection con = null;
-		PreparedStatement ps = null;
-		try {
-			// Connectionの取得
-			con = DBUtils.getConnection();
+		// UPDATE文を実行
+		TodoService service = new TodoService();
+		service.destroy(Integer.parseInt(id));
 
-			// SQL実行
-			String sql = ""
-					+ "DELETE FROM todos "
-					+ "WHERE id = ?";
-			ps = con.prepareStatement(sql);
-			ps.setString(1, id);
-
-			ps.executeUpdate();
-
-			// index.htmlへ遷移
-			List<String> successes = new ArrayList<String>();
-			successes.add("削除しました。");
-			session.setAttribute("successes", successes);
-			resp.sendRedirect("index.html");
-
-		} catch (Exception e) {
-			throw new ServletException(e);
-
-		} finally {
-			// Cnnectionクローズ
-			DBUtils.close(con, ps);
-		}
+		// index.htmlへ遷移
+		List<String> successes = new ArrayList<String>();
+		successes.add("削除しました。");
+		session.setAttribute("successes", successes);
+		resp.sendRedirect("index.html");
 	}
 
 	private List<String> validate(String id) {

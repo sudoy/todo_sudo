@@ -14,13 +14,13 @@
 		<div class="form-group">
 			<label for="title" class="col-sm-2 control-label">題名</label>
 			<div class="col-sm-10">
-				<input type="text" class="form-control" name="title" id="title" placeholder="題名" value="${param.title}">
+				<input type="text" class="form-control" name="title" id="title" placeholder="題名" value="${form.title}">
 			</div>
 		</div>
 		<div class="form-group">
 			<label for="detail" class="col-sm-2 control-label">詳細</label>
 			<div class="col-sm-10">
-				<textarea class="form-control" name="detail" id="detail" placeholder="詳細" rows="3">${param.detail}</textarea>
+				<textarea class="form-control" name="detail" id="detail" placeholder="詳細" rows="3">${form.detail}</textarea>
 			</div>
 		</div>
 		<div class="form-group">
@@ -28,19 +28,19 @@
 			<div class="col-sm-10">
 				<div class="radio">
 					<label>
-						<input type="radio" name="importance" id="importance3" value="3" ${HtmlUtils.checkImportance(param.importance, '3')}>
+						<input type="radio" name="importance" id="importance3" value="3" ${HtmlUtils.checkImportance(form.importance, '3')}>
 						★★★
 					</label>
 				</div>
 				<div class="radio">
 					<label>
-						<input type="radio" name="importance" id="importance2" value="2" ${HtmlUtils.checkImportance(param.importance, '2')}>
+						<input type="radio" name="importance" id="importance2" value="2" ${HtmlUtils.checkImportance(form.importance, '2')}>
 						★★
 					</label>
 				</div>
 				<div class="radio">
 					<label>
-						<input type="radio" name="importance" id="importance1" value="1" ${HtmlUtils.checkImportance(param.importance, '1')}>
+						<input type="radio" name="importance" id="importance1" value="1" ${HtmlUtils.checkImportance(form.importance, '1')}>
 						★
 					</label>
 				</div>
@@ -49,7 +49,7 @@
 		<div class="form-group">
 			<label for="limit" class="col-sm-2 control-label">期限</label>
 			<div class="col-sm-10">
-				<input type="text" class="form-control" name="limit_date" id="limit" placeholder="期限" value="${param.limit_date}">
+				<input type="text" class="form-control" name="limit_date" id="limit" placeholder="期限" value="${form.limitDate}">
 			</div>
 		</div>
 		<div class="form-group">

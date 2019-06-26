@@ -14,12 +14,12 @@
 		<th>重要度</th>
 		<th>期限</th>
 	</tr>
-<c:forEach var="todo" items="${todos}">
+<c:forEach var="f" items="${form}">
 	<tr>
-		<td>${todo.id}</td>
-		<td><a href="update.html?id=${todo.id}">${todo.title}</a></td>
-		<td>${HtmlUtils.formatImportance(todo)}</td>
-		<td>${HtmlUtils.formatLimitDate(todo)}</td>
+		<td>${f.id}</td>
+		<td><a href="update.html?id=${f.id}">${f.title}</a></td>
+		<td>${HtmlUtils.formatImportance(f.importance)}</td>
+		<td>${f.limitDate}</td>
 	</tr>
 </c:forEach>
 </table>

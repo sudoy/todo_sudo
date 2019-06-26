@@ -1,9 +1,6 @@
 package todo;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import todo.beans.User;
-import todo.utils.DBUtils;
+import todo.forms.LoginForm;
+import todo.service.AuthService;
 
 @WebServlet("/login.html")
 public class LoginServlet extends HttpServlet {
@@ -30,64 +27,42 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		req.setCharacterEncoding("UTF-8");
 		HttpSession session = req.getSession();
 
-		String email = req.getParameter("email");
-		String password = req.getParameter("password");
+		// パラメータをFormに変換
+		LoginForm form = LoginForm.fromParameter(req);
 
 		// バリデーションチェック
-		List<String> errors = validate(email, password);
+		List<String> errors = validate(form);
 		if (errors.size() > 0) {
 			session.setAttribute("errors", errors);
 			getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(req, resp);
 			return;
 		}
 
-		// 関連チェック
-		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			con = DBUtils.getConnection();
+		// ログインチェック
+		AuthService service = new AuthService();
+		LoginForm login = service.check(form);
 
-			String sql = "SELECT id, email, password, name "
-					+ "FROM users "
-					+ "WHERE email = ? AND password = MD5(?)";
-			ps = con.prepareStatement(sql);
-			ps.setString(1, email);
-			ps.setString(2, password);
-			rs = ps.executeQuery();
+		if(login != null) {
+			// email, パスワードが合っているとき
+			session.setAttribute("login", login);
+			resp.sendRedirect("index.html");
 
-			if (rs.next()) {
-				// emailとpasswordが正しいとき
-
-				// ログイン処理
-				// （セッションにログイン情報を保存する）
-				User user = new User(rs.getInt("id"),
-						rs.getString("email"),
-						rs.getString("password"),
-						rs.getString("name"));
-
-				session.setAttribute("user", user);
-				resp.sendRedirect("index.html");
-
-			} else {
-				// どちらかが間違っているとき
-				errors.add("メールアドレスかパスワードが間違っています。");
-				session.setAttribute("errors", errors);
-				getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(req, resp);
-			}
-
-		} catch (Exception e) {
-			throw new ServletException(e);
-
-		} finally {
-			DBUtils.close(con, ps, rs);
+		} else {
+			// どちらかが間違っているとき
+			errors.add("メールアドレスかパスワードが間違っています。");
+			session.setAttribute("errors", errors);
+			getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(req, resp);
 		}
 	}
 
-	private List<String> validate(String email, String password) {
+	private List<String> validate(LoginForm form) {
+		// formから値を取り出す
+		String email = form.getEmail();
+		String password = form.getPassword();
+
+		// エラーメッセージ
 		List<String> errors = new ArrayList<>();
 
 		// メールアドレスの必須

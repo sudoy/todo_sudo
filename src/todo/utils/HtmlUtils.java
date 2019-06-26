@@ -1,45 +1,28 @@
 package todo.utils;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
-
-import todo.beans.Todo;
 
 public class HtmlUtils {
-	public static String test() {
-		return "hogehoge";
-	}
-
-	public static String formatImportance(Todo todo) {
-		if (todo.getImportance() == 1) {
+	public static String formatImportance(int importance) {
+		if (importance == 1) {
 			return "★";
-		} else if (todo.getImportance() == 2) {
+		} else if (importance == 2) {
 			return "★★";
-		} else if (todo.getImportance() == 3) {
+		} else if (importance == 3) {
 			return "★★★";
 		} else {
 			return "";
 		}
 	}
 
-	public static String formatLimitDate(Object todo) {
-		if (todo instanceof Todo) {
-			LocalDate limit = ((Todo) todo).getLimitDate();
-			if (limit == null) {
-				return "";
-			}
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-			return limit.format(dtf);
-
-		} else if (todo instanceof Map) {
-			@SuppressWarnings("unchecked")
-			Map<String, String> m = (Map<String, String>) todo;
-			return m.get("limit_date");
-
-		} else {
-			return todo.toString();
+	public static String formatLimitDate(Date date) {
+		if (date == null) {
+			return "";
 		}
+
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+		return date.toLocalDate().format(format);
 	}
 
 	public static String checkImportance(String param, String value) {
